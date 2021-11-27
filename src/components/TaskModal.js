@@ -111,7 +111,6 @@ function TaskModal(props) {
             <Stack component="form" noValidate spacing={3} width="500">
               <TextField
                 autoFocus
-                margin="normal"
                 id="name"
                 label="Name"
                 value={name}
@@ -133,7 +132,6 @@ function TaskModal(props) {
               />
               <TextField
                 multiline
-                margin="normal"
                 id="name"
                 label="Description"
                 value={description}
@@ -147,7 +145,6 @@ function TaskModal(props) {
               />
               <InputLabel id="demo-simple-select-label">Priority</InputLabel>
               <Select
-                margin="normal"
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={priority}

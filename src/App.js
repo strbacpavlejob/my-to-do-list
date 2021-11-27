@@ -15,14 +15,17 @@ import Cookies from "universal-cookie";
 function App() {
   const cookies = new Cookies();
 
-  const [taskList, setTaskList] = useState([{}]);
+  const [taskList, setTaskList] = useState([]);
 
   const [openModal, setOpenModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editTask, setEditTask] = useState({});
 
   useEffect(() => {
-    setTaskList(cookies.get("myTaskList"));
+    let list = cookies.get("myTaskList");
+    if (list !== undefined) {
+      setTaskList(cookies.get("myTaskList"));
+    }
   }, []);
 
   useEffect(() => {

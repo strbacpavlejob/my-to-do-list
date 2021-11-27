@@ -25,6 +25,7 @@ const TaskList = (props) => {
   };
   const handleOnDragEnd = (result) => {
     props.dragTask(result);
+    console.log(props.tasks);
   };
 
   return (
@@ -33,7 +34,7 @@ const TaskList = (props) => {
         {(provided) => (
           <Stack
             direction="column"
-            spacing={2}
+            spacing={5}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
@@ -41,6 +42,7 @@ const TaskList = (props) => {
               <Draggable key={index} draggableId={row.id} index={index}>
                 {(provided) => (
                   <Item
+                    key={index}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     ref={provided.innerRef}
