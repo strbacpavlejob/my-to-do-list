@@ -125,7 +125,9 @@ function TaskModal(props) {
                 label="Date"
                 value={date}
                 onChange={(newValue) => {
-                  setDate(newValue);
+                  if (newValue >= new Date()) {
+                    setDate(newValue);
+                  }
                 }}
                 minDate={new Date()}
                 renderInput={(params) => <TextField {...params} />}
