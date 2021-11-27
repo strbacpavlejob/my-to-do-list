@@ -48,6 +48,12 @@ function TaskModal(props) {
     setPriority(props.editTask.priority);
   }, [props.editMode]);
 
+  const makeHashId = () => {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  };
+
   const resetForm = () => {
     setName("");
     setDescription("");
@@ -77,6 +83,7 @@ function TaskModal(props) {
       return;
     }
     let newTask = {
+      id: makeHashId(),
       name: name,
       description: description,
       date: date,
@@ -162,6 +169,7 @@ function TaskModal(props) {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={priority}
+                defaultValue={"low"}
                 label="Priority"
                 onChange={(event) => setPriority(event.target.value)}
               >

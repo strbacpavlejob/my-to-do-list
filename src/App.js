@@ -68,6 +68,9 @@ function App() {
   const edit = (editedTask) => {
     let index = taskList.indexOf(editTask);
     editedTask.done = editTask.done;
+    editedTask.id = editTask.id;
+
+    console.log(editTask);
 
     setTaskList([
       ...taskList.slice(0, index),

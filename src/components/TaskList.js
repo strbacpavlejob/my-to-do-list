@@ -44,7 +44,7 @@ const TaskList = (props) => {
             ref={provided.innerRef}
           >
             {props.tasks.map((row, index) => (
-              <Draggable key={index} draggableId={row.name} index={index}>
+              <Draggable key={index} draggableId={row.id} index={index}>
                 {(provided) => (
                   <Item
                     {...provided.draggableProps}
