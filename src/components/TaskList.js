@@ -11,6 +11,7 @@ import { Delete, Rowing } from "@material-ui/icons";
 import Checkbox from "@mui/material/Checkbox";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -29,36 +30,63 @@ const TaskList = (props) => {
   const handleEditRow = (row) => {
     props.edit(row);
   };
+  const handleOnDragEnd = (result) => {
+    props.dragTask(result);
+  };
   return (
-    <Stack direction="column" spacing={2}>
-      {props.tasks.map((row, index) => (
-        <Item key={index}>
-          {" "}
-          <Checkbox
-            checked={row.done === true}
-            onChange={() => {
-              handleToggleDone(row);
-            }}
-          />
-          <Button
-            onClick={() => {
-              handleEditRow(row);
-            }}
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <Droppable droppableId="tasksList">
+        {(provided) => (
+          <Stack
+            direction="column"
+            spacing={2}
+            {...provided.droppableProps}
+            ref={provided.innerRef}
           >
-            {row.done === true ? <strike>{row.name}</strike> : row.name}
-          </Button>
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            onClick={() => {
-              handleDeleteRow(row);
-            }}
-          >
-            <Delete />
-          </IconButton>
-        </Item>
-      ))}
-    </Stack>
+            {props.tasks.map((row, index) => (
+              <Draggable key={index} draggableId={row.name} index={index}>
+                {(provided) => (
+                  <Item
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}
+                  >
+                    {" "}
+                    <Checkbox
+                      checked={row.done === true}
+                      onChange={() => {
+                        handleToggleDone(row);
+                      }}
+                    />
+                    <Button
+                      onClick={() => {
+                        handleEditRow(row);
+                      }}
+                    >
+                      {row.done === true ? (
+                        <strike>{row.name}</strike>
+                      ) : (
+                        row.name
+                      )}
+                    </Button>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => {
+                        handleDeleteRow(row);
+                      }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Item>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </Stack>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };
 

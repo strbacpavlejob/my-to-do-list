@@ -76,6 +76,14 @@ function App() {
     ]);
     handleModalClose();
   };
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = Array.from(taskList);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setTaskList(items);
+  };
 
   return (
     <div className="App">
@@ -107,6 +115,7 @@ function App() {
               edit={handleEditTask}
               delete={handleTaskDelete}
               toggleDone={handleTaskDoneToggle}
+              dragTask={handleOnDragEnd}
             />
           ) : (
             <Typography
