@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
   InputLabel,
@@ -15,10 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Box } from "@mui/system";
-import DatePicker from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { LocalizationProvider, MobileDatePicker } from "@mui/lab";
+import { set } from "date-fns";
 
 const style = {
   position: "absolute",
@@ -35,6 +33,13 @@ const style = {
 function TaskModal(props) {
   const [open, setOpen] = useState(props.open);
   const handleClose = () => setOpen(false);
+  const [nameFormError, setNameFormError] = useState("");
+  const [descriptionFormError, setDescriptionFormError] = useState("");
+
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [priority, setPriority] = useState("low");
 
   useEffect(() => {
     setName(props.editTask.name);
@@ -48,9 +53,29 @@ function TaskModal(props) {
     setDescription("");
     setDate(new Date());
     setPriority("low");
+    setNameFormError("");
+    setDescriptionFormError("");
+  };
+
+  const checkForm = () => {
+    let isFormValid = true;
+    if (!name || name.length < 3) {
+      setNameFormError("Name must be at least 3 characters long!");
+      isFormValid = false;
+    }
+    if (!description || description.length < 3) {
+      setDescriptionFormError(
+        "Description must be at least 3 characters long!"
+      );
+      isFormValid = false;
+    }
+    return !isFormValid;
   };
 
   const handleSave = () => {
+    if (checkForm()) {
+      return;
+    }
     let newTask = {
       name: name,
       description: description,
@@ -63,6 +88,9 @@ function TaskModal(props) {
   };
 
   const handleEdit = () => {
+    if (checkForm()) {
+      return;
+    }
     let editedTask = {
       name: name,
       description: description,
@@ -74,10 +102,14 @@ function TaskModal(props) {
     resetForm();
   };
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [priority, setPriority] = useState("low");
+  useEffect(() => {
+    if (name && name.length > 3) {
+      setNameFormError("");
+    }
+    if (description && description.length > 3) {
+      setDescriptionFormError("");
+    }
+  }, [name, description]);
 
   return (
     <div>
@@ -87,7 +119,7 @@ function TaskModal(props) {
         </DialogTitle>
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <Stack component="form" noValidate spacing={3} minWidth={450}>
+            <Stack component="form" noValidate spacing={3} width="500">
               <TextField
                 autoFocus
                 margin="normal"
@@ -98,6 +130,8 @@ function TaskModal(props) {
                 fullWidth
                 variant="standard"
                 inputProps={{ maxLength: 100 }}
+                error={nameFormError.length > 0}
+                helperText={nameFormError}
               />
               <MobileDatePicker
                 label="Date"
@@ -119,6 +153,8 @@ function TaskModal(props) {
                 fullWidth
                 variant="standard"
                 inputProps={{ maxLength: 1000 }}
+                error={descriptionFormError.length > 0}
+                helperText={descriptionFormError}
               />
               <InputLabel id="demo-simple-select-label">Priority</InputLabel>
               <Select

@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button, IconButton, Stack } from "@mui/material";
-import { Delete } from "@material-ui/icons";
+import { Delete, Rowing } from "@material-ui/icons";
 import Checkbox from "@mui/material/Checkbox";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
@@ -31,11 +31,11 @@ const TaskList = (props) => {
   };
   return (
     <Stack direction="column" spacing={2}>
-      {props.tasks.map((row) => (
-        <Item>
+      {props.tasks.map((row, index) => (
+        <Item key={index}>
           {" "}
           <Checkbox
-            checked={row.done}
+            checked={row.done === true}
             onChange={() => {
               handleToggleDone(row);
             }}

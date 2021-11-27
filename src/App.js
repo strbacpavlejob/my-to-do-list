@@ -1,25 +1,34 @@
-import { AppBar, Button, Divider, Toolbar, Typography } from "@mui/material";
-import { useState } from "react";
+import {
+  AppBar,
+  Divider,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Add from "@material-ui/icons/Add";
 import TaskModal from "./components/TaskModal";
 import TaskList from "./components/TaskList";
-import { Box } from "@mui/system";
+import Cookies from "universal-cookie";
 
 function App() {
-  const [taskList, setTaskList] = useState([
-    {
-      name: "dasfsdf",
-      description: "sdfsdfdsf",
-      date: "2021-11-03",
-      priority: "low",
-      done: false,
-    },
-  ]);
+  const cookies = new Cookies();
+
+  const [taskList, setTaskList] = useState([{}]);
 
   const [openModal, setOpenModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editTask, setEditTask] = useState({});
+
+  useEffect(() => {
+    setTaskList(cookies.get("myTaskList"));
+  }, []);
+
+  useEffect(() => {
+    const cookies = new Cookies();
+    cookies.set("myTaskList", taskList, { path: "/" });
+  }, [taskList]);
 
   const handleTaskAdd = () => {
     setOpenModal(true);
@@ -32,7 +41,6 @@ function App() {
   const handleModelSave = (data) => {
     setTaskList([...taskList, data]);
     setOpenModal(false);
-    console.log(taskList);
   };
   const handleTaskDelete = (currentTask) => {
     setTaskList(
@@ -71,28 +79,27 @@ function App() {
 
   return (
     <div className="App">
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              My Todo List
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      </Box>
-      <Divider />
-      <header className="App-header">
-        <div className="add-task-form">
-          <Button
-            variant="contained"
+      <AppBar position="sticky">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            My Todo List
+          </Typography>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
             onClick={() => {
               handleTaskAdd();
             }}
           >
-            Add new Task
             <Add />
-          </Button>
-        </div>
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <Divider />
+      <header>
         <div className="tasks-list">
           {taskList.length > 0 ? (
             <TaskList
@@ -101,9 +108,19 @@ function App() {
               delete={handleTaskDelete}
               toggleDone={handleTaskDoneToggle}
             />
-          ) : null}
+          ) : (
+            <Typography
+              variant="h7"
+              component="div"
+              sx={{ flexGrow: 1 }}
+              textAlign="center"
+              color="#666"
+            >
+              Add new tasks by clicking on plus sign
+            </Typography>
+          )}
         </div>
-        <div className="modal">
+        <div>
           <TaskModal
             open={openModal}
             close={handleModalClose}
