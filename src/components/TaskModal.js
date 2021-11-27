@@ -4,35 +4,17 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
   InputLabel,
   MenuItem,
-  Modal,
   Select,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { LocalizationProvider, MobileDatePicker } from "@mui/lab";
-import { set } from "date-fns";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 function TaskModal(props) {
-  const [open, setOpen] = useState(props.open);
-  const handleClose = () => setOpen(false);
   const [nameFormError, setNameFormError] = useState("");
   const [descriptionFormError, setDescriptionFormError] = useState("");
 
@@ -120,7 +102,7 @@ function TaskModal(props) {
 
   return (
     <div>
-      <Dialog open={props.open} onClose={handleClose}>
+      <Dialog open={props.open}>
         <DialogTitle>
           {props.editMode === true ? `Edit Task` : `Add new Task`}
         </DialogTitle>
